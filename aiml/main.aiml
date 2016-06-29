@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml>
+    <category>
+        <pattern>BOTCMD START</pattern>
+        <template>
+            <think><set name="topic">init</set></think>
+            Ciao, sono un bot dimostrativo. Raccolgo le opinioni su luoghi ed eventi, le metto insieme e poi ti dico cosa ne pensa la gente. Se mi dici dove ti trovi iniziamo.
+        </template>
+    </category>
+
+    <!-- Location updating -->
+    <category>
+        <pattern>MI TROVO A _</pattern>
+        <template>
+            BOTCMD LOCATION <star />
+        </template>
+    </category>
+
+    <category>
+        <pattern>SONO A _</pattern>
+        <template>
+            BOTCMD LOCATION <star />
+        </template>
+    </category>
+
+    <category>
+        <pattern>MI TROVO IN _</pattern>
+        <template>
+            BOTCMD LOCATION <star />
+        </template>
+    </category>
+
+    <category>
+        <pattern>SONO IN _</pattern>
+        <template>
+            BOTCMD LOCATION <star />
+        </template>
+    </category>
+
+    <!-- RESET -->
+    <topic name="init">
+        <category>
+            <pattern>BOTCMD START</pattern>
+            <template>
+                <think><set name="topic">init</set></think>
+                Ciao, sono un bot dimostrativo. Raccolgo le opinioni, legate ad un luogo o ad un evento, tue e di altri utenti. Inizia segnalandomi dove ti trovi.
+            </template>
+        </category>
+    </topic>
+
+    <topic name="ready">
+        <category>
+            <pattern>BOTCMD START</pattern>
+            <template>
+                <think><set name="topic">init</set></think>
+                Rieccoci. Come sai sono solo un bot dimostrativo. Raccolgo le tue opinioni sul luogo in cui ti trovi e ti dico cosa pensa la gente intorno a te. Per farlo devo sapere dove dove ti trovi.
+            </template>
+        </category>
+    </topic>
+
+    <topic name="active">
+        <category>
+            <pattern>BOTCMD START</pattern>
+            <template>
+                <think><set name="topic">init</set></think>
+                Prima di tutto dimmi dove ti trovi. Sono sono un bot dimostrativo che raccoglie e mescola le opinioni sui luoghi. Per questo ho bisogno di sapere dove sei.
+            </template>
+        </category>
+    </topic>
+
+    <!-- INIT -->
+    <topic name="init">
+        <category>
+            <pattern>*</pattern>
+            <template>
+                Ti trovi a <star />?
+            </template>
+        </category>
+
+        <category>
+            <pattern>SÌ</pattern>
+            <that>TI TROVI A *</that>
+            <template>
+                BOTCMD LOCATION <thatstar />
+            </template>
+        </category>
+
+        <category>
+            <pattern>SI</pattern>
+            <that>TI TROVI A *</that>
+            <template>
+                BOTCMD LOCATION <thatstar />
+            </template>
+        </category>
+
+        <category>
+            <pattern>NO</pattern>
+            <template>
+                <random>
+                    <li>OK, dove ti trovi quindi?</li>
+                    <li>Scusa, ho frainteso.</li>
+                    <li>Ops, forse è meglio se mi mandi direttamente la posizione.</li>
+                    <li>Scusa, ma in questa fase non so parlare del più e del meno. Ho bisogno di sapere dove sei.</li>
+                    <li>Mi dispiace, riprova a dirmi dove sei.</li>
+                    <li>Riproviamo, magari usa la posizione.</li>
+                </random>
+            </template>
+        </category>
+
+        <category>
+            <pattern>BOTCMD READY</pattern>
+            <template>
+                <random>
+				<li><think><set name="topic">ready</set></think>
+                	Perfetto. Ora so dove ti trovi. Quando sei pronto dimmelo e memorizzerò le tue impressioni.</li>
+				<li><think><set name="topic">ready</set></think>
+                	Ottimo! Ora che so dove sei, posso registrare il tuo pensiero. Dimmi "pronto" quando vuoi.</li>
+				<li><think><set name="topic">ready</set></think>
+                	Bene. Appena sei pronto dimmelo e registrerò le tue opinioni sul luogo in cui ti trovi.</li>
+			</random>
+            </template>
+        </category>
+    </topic>
+
+    <!-- READY -->
+    <topic name="ready">
+        <category>
+            <pattern>PRONTO</pattern>
+            <template>
+                <srai>INTERNALCMD ACTIVATE</srai>
+            </template>
+        </category>
+
+        <category>
+            <pattern>SONO PRONTO</pattern>
+            <template>
+                <srai>INTERNALCMD ACTIVATE</srai>
+            </template>
+        </category>
+
+        <category>
+            <pattern>OK</pattern>
+            <that>DIMMI QUANDO SEI PRONTO</that>
+            <template>
+                <srai>INTERNALCMD ACTIVATE</srai>
+            </template>
+        </category>
+
+        <category>
+            <pattern>SÌ</pattern>
+            <that>DIMMI QUANDO SEI PRONTO</that>
+            <template>
+                <srai>INTERNALCMD ACTIVATE</srai>
+            </template>
+        </category>
+
+        <category>
+            <pattern>LO SONO</pattern>
+            <that>DIMMI QUANDO SEI PRONTO</that>
+            <template>
+                <srai>INTERNALCMD ACTIVATE</srai>
+            </template>
+        </category>
+
+        <category>
+            <pattern>QUANDO VUOI</pattern>
+            <that>DIMMI QUANDO SEI PRONTO</that>
+            <template>
+                <srai>INTERNALCMD ACTIVATE</srai>
+            </template>
+        </category>
+
+        <category>
+            <pattern>QUANDO VUOI *</pattern>
+            <that>DIMMI QUANDO SEI PRONTO</that>
+            <template>
+                <srai>INTERNALCMD ACTIVATE</srai>
+            </template>
+        </category>
+
+        <category>
+            <pattern>BOTCMD READY</pattern>
+            <template>
+                Nuova posizione ricevuta.
+            </template>
+        </category>
+
+        <category>
+            <pattern>INTERNALCMD ACTIVATE</pattern>
+            <template>
+                BOTCMD ACTIVE
+                <think><set name="topic">active</set></think>
+                Dimmi cosa pensi del luogo o dell'evento in cui sei. Quando hai finito, dimmi "basta".
+            </template>
+        </category>
+
+        <category>
+            <pattern>RISULTATI</pattern>
+            <template>BOTCMD RESULTS</template>
+        </category>
+
+        <category>
+            <pattern>* RISULTATI</pattern>
+            <template>BOTCMD RESULTS</template>
+        </category>
+
+        <category>
+            <pattern>RISULTATI</pattern>
+            <template>BOTCMD RESULTS</template>
+        </category>
+
+        <category>
+            <pattern>*</pattern>
+            <template>
+			<random>
+                	<li>Dimmi quando sei pronto.</li>
+                	<li>Quando sei pronto, dimmelo.</li>
+                	<li>Appena vuoi che inizi a registrare cosa pensi del luogo in cui ti trovi, dimmi che sei pronto.</li>
+                	<li>Se sei pronto, dimmelo.</li>
+                	<li>Sono stato creato da poche ore, non sono in grado di sostenere una vera conversazione, dimmi quando sei pronto a parlarmi del luogo in cui ti trovi.</li>
+			</random>
+            </template>
+        </category>
+    </topic>
+
+    <!-- ACTIVE -->
+    <topic name="active">
+        <category>
+            <pattern>BOTCMD READY</pattern>
+            <template>
+                Nuova posizione ricevuta.
+            </template>
+        </category>
+
+        <category>
+            <pattern>BASTA</pattern>
+            <template>
+                <srai>INTERNALCMD DEACTIVATE</srai>
+            </template>
+        </category>
+
+        <category>
+            <pattern>FINE</pattern>
+            <template>
+                <srai>INTERNALCMD DEACTIVATE</srai>
+            </template>
+        </category>
+
+        <category>
+            <pattern>BASTA *</pattern>
+            <template>
+                <srai>INTERNALCMD DEACTIVATE</srai>
+            </template>
+        </category>
+
+	  <category>
+            <pattern>* BASTA</pattern>
+            <template>
+                <srai>INTERNALCMD DEACTIVATE</srai>
+            </template>
+        </category>
+
+        <category>
+            <pattern>STOP</pattern>
+            <template>
+                <srai>INTERNALCMD DEACTIVATE</srai>
+            </template>
+        </category>
+
+        <category>
+            <pattern>HO FINITO</pattern>
+            <template>
+                <srai>INTERNALCMD DEACTIVATE</srai>
+            </template>
+        </category>
+
+        <category>
+            <pattern>HO CONCLUSO</pattern>
+            <template>
+                <srai>INTERNALCMD DEACTIVATE</srai>
+            </template>
+        </category>
+
+        <category>
+            <pattern>INTERNALCMD DEACTIVATE</pattern>
+            <template>
+                BOTCMD READY
+                <think><set name="topic">ready</set></think>
+                Ok. Non sto più registrando le tue parole.
+            </template>
+        </category>
+
+        <category>
+            <pattern>*</pattern>
+            <template>
+                <random>
+                    <li>Interessante, continua.</li>
+                    <li>Bene, parlamene ancora.</li>
+                    <li>Quando hai fatto dimmi basta.</li>
+                    <li>Se vuoi puoi dirmi anche come ti senti o cosa provi in quel luogo.</li>
+                    <li>Puoi usare frasi o parole chiave. Quando pensi di avermi detto abbastanza dimmi basta.</li>
+                    <li>Se cambi luogo ricordati di passarmi la nuova posizione.</li>
+                    <li>Stai andando alla grande. Continuiamo o basta?</li>
+                    <li>Se ti sposti aggiorna la posizione, o dimmi basta.</li>
+                </random>
+            </template>
+        </category>
+    </topic>
+</aiml>
